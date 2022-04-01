@@ -4,6 +4,11 @@ from fastapi.staticfiles import StaticFiles
 from utils import encodeMessage, decodeMessage
 from PIL import Image
 import uuid
+import os
+
+is_prod = os.environ.get("IS_HEROKU", None)
+
+static_url = "https://ketu-web.herokuapp.com/static/" if is_prod else "http://localhost:8000/static/"
 
 app = FastAPI()
 
@@ -37,7 +42,7 @@ async def create_upload_file(secret: str = Form(...), file: UploadFile | None = 
     else:
         random_id = uuid.uuid4()
         encodeMessage(Image.open(file.file), secret, f"{random_id}.png")
-        return {"filename": file.filename, "secret": secret, "url": f"http://localhost:8000/static/{random_id}.png"}
+        return {"filename": file.filename, "secret": secret, "url": f"{static_url}{random_id}.png"}
     
 @app.post("/decrypt")
 async def create_upload_file(file: UploadFile | None = None):
