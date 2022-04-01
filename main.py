@@ -10,7 +10,7 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
-    "https://ketu-web.vercel.app/",
+    "https://ketu-web.vercel.app",
     "https://vercel.app"
 ]
 
