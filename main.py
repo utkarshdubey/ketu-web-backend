@@ -45,7 +45,7 @@ async def create_upload_file(secret: str = Form(...), file: UploadFile | None = 
         image = lsb.hide(Image.open(file.file), secret)
         image.save(f"./static/{random_id}.png")
         # encodeMessage(Image.open(file.file), secret, f"{random_id}.png")
-        return {"filename": file.filename, "secret": secret, "url": f"http://localhost:8000/static/{random_id}.png"}
+        return {"filename": file.filename, "secret": secret, "url": f"${static_url}{random_id}.png"}
     
 @app.post("/decrypt")
 async def create_upload_file(file: UploadFile | None = None):
