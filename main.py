@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from utils import encodeMessage, decodeMessage
+from stegano import lsb
 from PIL import Image
 import uuid
 
@@ -36,7 +37,9 @@ async def create_upload_file(secret: str = Form(...), file: UploadFile | None = 
         return {"error": "Whoops, something weird with the file?"}
     else:
         random_id = uuid.uuid4()
-        encodeMessage(Image.open(file.file), secret, f"{random_id}.png")
+        image = lsb.hide(Image.open(file.file), secret)
+        image.save(f"./static/{random_id}.png")
+        # encodeMessage(Image.open(file.file), secret, f"{random_id}.png")
         return {"filename": file.filename, "secret": secret, "url": f"http://localhost:8000/static/{random_id}.png"}
     
 @app.post("/decrypt")
@@ -44,5 +47,6 @@ async def create_upload_file(file: UploadFile | None = None):
     if not file:
         return {"error": "Whoops, something weird with the file?"}
     else:
-        secret = decodeMessage(Image.open(file.file))
+        # secret = decodeMessage(Image.open(file.file))
+        secret = lsb.reveal(Image.open(file.file))
         return {"filename": file.filename, "secret": secret}

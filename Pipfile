@@ -9,6 +9,7 @@ uvicorn = {extras = ["standard"], version = "*"}
 python-multipart = "*"
 pillow = "==9.0.1"
 gunicorn = "*"
+stegano = "*"
 
 [dev-packages]
 
